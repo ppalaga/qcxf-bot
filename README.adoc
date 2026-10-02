@@ -1,0 +1,51 @@
+image::https://cli-assured.org/cli-assured-logo-with-text.svg[alt=CLI Assured,width=336]
+
+https://github.com/cli-assured/cli-assured/blob/main/LICENSE[image:https://img.shields.io/github/license/cli-assured/cli-assured.svg[License]]
+https://central.sonatype.com/artifact/org.cli-assured/cli-assured[image:https://img.shields.io/maven-central/v/org.cli-assured/cli-assured.svg[Maven
+Central]]
+
+CLI Assured is a Java DSL for running and testing command line applications.
+
+== Hello World!
+
+Test an executable available in `PATH`
+
+[source,java]
+----
+import org.cliassured.CliAssured;
+
+CliAssured
+    .command("echo", "Hello World!")
+    .stderrToStdout() // redirect stderr to stdout
+    .then()
+        // Assertions for stdout
+        // The same can be done with stderr(), unless you called stderrToStdout()
+        .stdout()
+            .hasLines("Hello World!")
+            .hasLinesContaining("Hello")
+            .hasLinesMatching(".*World!")
+            .doesNotHaveLinesContainingCaseInsensitive("error")
+            .log() // Pass every line to org.cliassured.stdout logger
+            .hasLineCount(1)
+            .redirect(Path.of("hello.txt")) // redirect the output to hello.txt
+        .exitCodeIs(0) // could be omitted as exit code 0 is enforced by default
+    .execute() // start the process and await its termination
+    .assertSuccess(); // Report all assertion errors
+----
+
+== Maven coordinates
+
+[source,xml]
+----
+<dependency>
+  <groupId>org.cli-assured</groupId>
+  <artifactId>cli-assured</artifactId>
+  <version><!-- Use the latest --></version>
+</dependency>
+----
+
+Find the latest version on https://central.sonatype.com/artifact/org.cli-assured/cli-assured/versions[Maven Central].
+
+== Documentation
+
+Visit https://cli-assured.org/ for more information.
